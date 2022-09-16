@@ -40,7 +40,7 @@ class ElOverblikApiBase
     public function __construct($refreshToken = null)
     {
         if (function_exists('storage_path')) {
-            $this->storage_path = storage_path();
+            $this->storage_path = storage_path() . '/refresh_tokens';
         } else {
             $this->storage_path = getcwd();
         }
