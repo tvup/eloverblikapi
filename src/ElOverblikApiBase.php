@@ -192,8 +192,11 @@ class ElOverblikApiBase
      */
     private function getAccessTokenFromFile(): void
     {
-
-        $file = file_get_contents($this->storage_path . '/' . $this->md5RefreshToken ? $this->md5RefreshToken . '-' : '' . self::TOKEN_FILENAME);
+        if(isset($this->md5RefreshToken)) {
+            $file = file_get_contents($this->storage_path . '/' . $this->md5RefreshToken ? $this->md5RefreshToken . '-' : '' . self::TOKEN_FILENAME);
+        } else {
+            $file = file_get_contents($this->storage_path . '/' . self::TOKEN_FILENAME);
+        }
         /** @var ElOverblikApiDataAccessToken $dataAccessToken */
         $dataAccessToken = unserialize($file);
         if ($dataAccessToken && Carbon::parse($dataAccessToken->getIssuedAt())->greaterThanOrEqualTo(Carbon::now()->subDay())) {
