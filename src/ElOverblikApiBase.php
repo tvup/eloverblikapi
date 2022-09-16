@@ -41,6 +41,11 @@ class ElOverblikApiBase
     {
         if (function_exists('storage_path')) {
             $this->storage_path = storage_path() . '/refresh_tokens';
+
+            if(!is_dir($this->storage_path)) {
+                mkdir($this->storage_path);
+            }
+
         } else {
             $this->storage_path = getcwd();
         }
