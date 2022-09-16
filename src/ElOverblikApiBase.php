@@ -193,7 +193,7 @@ class ElOverblikApiBase
     private function getAccessTokenFromFile(): void
     {
         if(isset($this->md5RefreshToken)) {
-            $file = file_get_contents($this->storage_path . '/' . $this->md5RefreshToken ? $this->md5RefreshToken . '-' : '' . self::TOKEN_FILENAME);
+            $file = file_get_contents($this->storage_path . '/' . ($this->md5RefreshToken ? $this->md5RefreshToken . '-' : '') . self::TOKEN_FILENAME);
         } else {
             $file = file_get_contents($this->storage_path . '/' . self::TOKEN_FILENAME);
         }
@@ -208,7 +208,7 @@ class ElOverblikApiBase
     private function saveAccessTokenToFile(ElOverblikApiDataAccessToken $dataAccessToken): void
     {
         if(isset($this->md5RefreshToken)) {
-            $file = fopen($this->storage_path . '/' . $this->md5RefreshToken ? $this->md5RefreshToken . '-' : '' . self::TOKEN_FILENAME, "w") or die("Unable to open file!");
+            $file = fopen($this->storage_path . '/' . ($this->md5RefreshToken ? $this->md5RefreshToken . '-' : '') . self::TOKEN_FILENAME, "w") or die("Unable to open file!");
         } else  {
             $file = fopen($this->storage_path . '/' . self::TOKEN_FILENAME, "w") or die("Unable to open file!");
         }
