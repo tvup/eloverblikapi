@@ -157,9 +157,9 @@ class ElOverblikApiBase
             'headers' => ['Authorization' => 'Bearer ' . $this->accessToken],
         ];
 
-        if ($this->debug) {
-            $options = array_merge($options, ['debug' => true,]);
-        }
+//        if ($this->debug) {
+//            $options = array_merge($options, ['debug' => true,]);
+//        }
         if (null !== $payload) {
             $options = array_merge($options, ['json' => $payload]);
         }
