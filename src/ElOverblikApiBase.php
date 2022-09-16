@@ -207,7 +207,11 @@ class ElOverblikApiBase
 
     private function saveAccessTokenToFile(ElOverblikApiDataAccessToken $dataAccessToken): void
     {
-        $file = fopen($this->storage_path . '/' . $this->md5RefreshToken ? $this->md5RefreshToken . '-' : '' . self::TOKEN_FILENAME, "w") or die("Unable to open file!");
+        if(isset($this->md5RefreshToken)) {
+            $file = fopen($this->storage_path . '/' . $this->md5RefreshToken ? $this->md5RefreshToken . '-' : '' . self::TOKEN_FILENAME, "w") or die("Unable to open file!");
+        } else  {
+            $file = fopen($this->storage_path . '/' . self::TOKEN_FILENAME, "w") or die("Unable to open file!");
+        }
         fwrite($file, serialize($dataAccessToken));
         fclose($file);
     }
