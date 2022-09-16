@@ -10,7 +10,7 @@ Requires a refresh token obtained at https://eloverblik.dk/customer/login
 
 ## Installation with composer
 ```
-composer require tvup/energioverblikapi
+composer require tvup/eloverblikapi
 ```
 
 
@@ -18,7 +18,7 @@ composer require tvup/energioverblikapi
 ```
 require_once 'vendor/autoload.php';
 
-$eloverblik = new Tvup\EnergiOverblikApi\EnergiOverblikApi();
+$eloverblik = new Tvup\ElOverblikApi\ElOverblikApi();
 //$eloverblik->setDebug(true);
 
 $eloverblik->token('YOUR_REFRESH_TOKEN');
