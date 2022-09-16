@@ -2,29 +2,39 @@
 
 namespace Tvup\ElOverblikApi;
 
+use Carbon\Carbon;
+
 class ElOverblikApiMock implements ElOverblikApiInterface
 {
 
-    public function login(string $email, string $password)
+    public function token(string $token): void
     {
-        // TODO: Implement login() method.
+        // TODO: Implement token() method.
     }
 
-    public function getConsumptionData(string $fileType, string $installationNumber, int $consumerNumber, int $meterId, int $counterId, int $type, int $utility, string $unit, string $factoryNumber): array
+    public function getFirstMeteringPoint(): string
     {
-        $data = El::CONSUMPTION_DATA;
+        return 'fisk';
+    }
 
-        $dataArray = explode(PHP_EOL, $data);
-        array_shift($dataArray); //First line is "sep=" for some reason
-        array_shift($dataArray); //Second line is table headers
-
-        $returnArray = array();
-
-        foreach ($dataArray as $line) {
-            $lineArray = explode(';', $line);
-            array_push($returnArray, [$lineArray[0] => $lineArray[1]]);
+    public function getHourTimeSeriesFromMeterData(string $fromDate, string $toDate, ?string $meteringPointId): array
+    {
+        $file = file_get_contents(__DIR__ . '/../example_data/el.dat');
+        $array =  unserialize($file);
+        $days = array();
+        foreach ($array as $day) {
+            $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->toDateString();
+            $hourArray = array();
+            foreach ($day['Point'] as $point) {
+                array_push($hourArray, $point['out_Quantity.quantity']);
+            }
+            $days[$day_key] = $hourArray;
         }
+        return $days;
+    }
 
-        return $returnArray;
+    public function setDebug(bool $debug): void
+    {
+        // TODO: Implement setDebug() method.
     }
 }

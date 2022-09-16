@@ -2,6 +2,8 @@
 
 namespace Tvup\ElOverblikApi;
 
+use Carbon\Carbon;
+
 class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
 {
     protected bool $debug;
@@ -29,7 +31,17 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         $payload = ['meteringPoints' => ['meteringPoint'=> [$meteringPointId]]];
         $json = $this->makeErrorHandledRequest('POST', 'meterdata/gettimeseries/' . $fromDate . '/' . $toDate . '/Hour', null, $payload, true);
         $json = json_decode($json, true);
-        return $json['result'][0]['MyEnergyData_MarketDocument']['TimeSeries'][0]['Period'];
+        $result = $json['result'][0]['MyEnergyData_MarketDocument']['TimeSeries'][0]['Period'];
+        $days = array();
+        foreach ($result as $day) {
+            $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->toDateString();
+            $hourArray = array();
+            foreach ($day['Point'] as $point) {
+                array_push($hourArray, $point['out_Quantity.quantity']);
+            }
+            $days[$day_key] = $hourArray;
+        }
+        return $days;
     }
 
     /**
