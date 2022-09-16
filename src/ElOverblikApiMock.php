@@ -20,17 +20,17 @@ class ElOverblikApiMock implements ElOverblikApiInterface
     public function getHourTimeSeriesFromMeterData(string $fromDate, string $toDate, ?string $meteringPointId): array
     {
         $file = file_get_contents(__DIR__ . '/../example_data/el.dat');
-        $array =  unserialize($file);
-        $days = array();
-        foreach ($array as $day) {
-            $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->toDateString();
-            $hourArray = array();
+        $result =  unserialize($file);
+        $allHours = array();
+        foreach ($result as $day) {
+            $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->startOfDay();
             foreach ($day['Point'] as $point) {
-                array_push($hourArray, $point['out_Quantity.quantity']);
+                $day_hour_key = $day_key->toDateTimeLocalString();
+                array_push($allHours, [$day_hour_key=>$point['out_Quantity.quantity']]);
+                $day_key->addHour();
             }
-            $days[$day_key] = $hourArray;
         }
-        return $days;
+        return $allHours;
     }
 
     public function setDebug(bool $debug): void

@@ -32,16 +32,16 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         $json = $this->makeErrorHandledRequest('POST', 'meterdata/gettimeseries/' . $fromDate . '/' . $toDate . '/Hour', null, $payload, true);
         $json = json_decode($json, true);
         $result = $json['result'][0]['MyEnergyData_MarketDocument']['TimeSeries'][0]['Period'];
-        $days = array();
+        $allHours = array();
         foreach ($result as $day) {
-            $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->toDateString();
-            $hourArray = array();
+            $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->startOfDay();
             foreach ($day['Point'] as $point) {
-                array_push($hourArray, $point['out_Quantity.quantity']);
+                $day_hour_key = $day_key->toDateTimeLocalString();
+                array_push($allHours, [$day_hour_key=>$point['out_Quantity.quantity']]);
+                $day_key->addHour();
             }
-            $days[$day_key] = $hourArray;
         }
-        return $days;
+        return $allHours;
     }
 
     /**
