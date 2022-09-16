@@ -1,0 +1,21 @@
+{
+    "name": "tvup/eloverblikapi",
+    "description": "API for getting consumption data from energioverblik",
+    "license": "MIT",
+    "type": "library",
+    "require": {
+        "php": ">=7.1",
+        "guzzlehttp/guzzle": "^7.5"    },
+
+    "autoload": {
+        "psr-4": {
+            "Tvup\\ElOverblikApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tvup",
+            "email": "tvupper@gmail.com"
+        }
+    ]
+}

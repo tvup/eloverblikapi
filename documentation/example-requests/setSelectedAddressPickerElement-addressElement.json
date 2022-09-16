@@ -1,0 +1,51 @@
+{
+  "Id": 0,
+  "Active": true,
+  "Address": {
+    "PostalCode": "2630",
+    "City": "Taastrup",
+    "Street": "Ludvig Hegners Alle",
+    "StreetCode": "1234",
+    "Number": "99",
+    "Letter": "",
+    "MunicipalityCode": "169",
+    "Floor": "",
+    "Side": "",
+    "Location": null,
+    "Aftagenummer": null
+  },
+  "Installations": [
+    {
+      "InstallationNumber": "1234567",
+      "ConsumerNumber": "1",
+      "SubDebitorNumber": "1",
+      "PaymentMethod": "FIK",
+      "CompanyNumber": "1",
+      "Address": {
+        "PostalCode": "2630",
+        "City": "Taastrup",
+        "Street": "Ludvig Hegners Alle",
+        "StreetCode": "1234",
+        "Number": "99",
+        "Letter": "",
+        "MunicipalityCode": "169",
+        "Floor": "",
+        "Side": "",
+        "Location": null,
+        "Aftagenummer": null
+      },
+      "Active": true,
+      "SamleInstallation": false,
+      "SupplyTypes": [
+        0
+      ],
+      "MoveInDate": "1980-01-01T00:00:00",
+      "HasAgreement": false,
+      "AgreementType": null,
+      "AlternatePayer": false
+    }
+  ],
+  "IsDummyHistoricElement": false,
+  "UniqueAddress": true,
+  "DisplayString": "Ludvig Hegners Alle 99, 2630 Taastrup"
+}
