@@ -10,5 +10,7 @@ interface ElOverblikApiInterface
 
     public function getHourTimeSeriesFromMeterData(string $fromDate, string $toDate, ?string $meteringPointId): array;
 
+    public function getCharges(string $meteringPointId): array;
+
     public function setDebug(bool $debug): void;
 }

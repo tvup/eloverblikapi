@@ -44,6 +44,16 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         return $allHours;
     }
 
+    public function getCharges(string $meteringPointId): array
+    {
+        $payload = ['meteringPoints' => ['meteringPoint'=> [$meteringPointId]]];
+        $json = $this->makeErrorHandledRequest('POST', 'meteringpoints/meteringpoint/getcharges', null, $payload, true);
+        $json = json_decode($json, true);
+        $subscriptions = $json['result'][0]['result']['subscriptions'];
+        $tariffs = $json['result'][0]['result']['tariffs'];
+        return array($subscriptions, $tariffs);
+    }
+
     /**
      * @param bool $debug
      */
