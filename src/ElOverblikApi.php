@@ -25,6 +25,15 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         return $meteringPointId;
     }
 
+    public function getMeteringPointData(): string
+    {
+        $json = $this->makeErrorHandledRequest('GET', 'meteringpoints/meteringpoints', null, null, true);
+        $meteringPointData = json_decode($json, true)['result'][0];
+        $meteringPointId = $meteringPointData['meteringPointId'];
+        $this->meteringPointId = $meteringPointId;
+        return $meteringPointData;
+    }
+
     public function getHourTimeSeriesFromMeterData(string $fromDate, string $toDate, ?string $meteringPointId): array
     {
         $meteringPointId = $meteringPointId ? : $this->meteringPointId;

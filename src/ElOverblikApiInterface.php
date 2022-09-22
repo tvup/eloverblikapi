@@ -8,6 +8,8 @@ interface ElOverblikApiInterface
 
     public function getFirstMeteringPoint(): string;
 
+    public function getMeteringPointData(): string;
+
     public function getHourTimeSeriesFromMeterData(string $fromDate, string $toDate, ?string $meteringPointId): array;
 
     public function getCharges(string $meteringPointId): array;
