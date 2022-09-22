@@ -141,11 +141,13 @@ class ElOverblikApiBase
                 }
             }
         } catch (TransferException $e) {
+            $response = $e->getResponse()->getBody()->getContents();
             $messages = [
                 'Verb' => $verb,
                 'Endpoint' => $endpoint,
                 'Payload' => $payload,
                 'Message' => $e->getMessage(),
+                'Response' => $response,
                 'Code' => $e->getCode(),
                 'Class' => get_class($e)
             ];
