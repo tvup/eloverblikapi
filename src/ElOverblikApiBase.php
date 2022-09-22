@@ -112,12 +112,12 @@ class ElOverblikApiBase
                 }
             } catch (ClientException $e) {
                 $exceptionBody = $e->getResponse()->getBody()->getContents();
-                $decodedExceptionBody = json_decode($exceptionBody, true);
                 $messages = [
                     'Verb' => $verb,
                     'Endpoint' => $endpoint,
                     'Payload' => $payload,
-                    'Body' => $decodedExceptionBody,
+                    'Message' => $e->getMessage(),
+                    'Response' => $exceptionBody,
                     'Code' => $e->getCode(),
                 ];
 
@@ -141,6 +141,7 @@ class ElOverblikApiBase
                 }
             }
         } catch (TransferException $e) {
+            //503 goes here
             $response = $e->getResponse()->getBody()->getContents();
             $messages = [
                 'Verb' => $verb,
