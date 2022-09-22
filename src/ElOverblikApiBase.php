@@ -125,7 +125,6 @@ class ElOverblikApiBase
                 if($e->getCode() == 401 && $this->cachedToken) {
                     //Clear data-access token
                     $this->cachedToken = false;
-                    $this->refreshToken = null;
                     //Login
                     $this->makeErrorHandledRequest('GET', 'token', null, null);
                     //Retry
@@ -153,6 +152,18 @@ class ElOverblikApiBase
             }
         } catch (TransferException $e) {
             //503 goes here
+
+            //Retry with without data-access token
+            if($e->getCode() == 401 && $this->cachedToken) {
+                //Clear data-access token
+                $this->cachedToken = false;
+                //Login
+                $this->makeErrorHandledRequest('GET', 'token', null, null);
+                //Retry
+                return $this->makeErrorHandledRequest($verb, $endpoint, $parameters, $payload, $returnResponse);
+            }
+
+
             $response = $e->getResponse()->getBody()->getContents();
             $messages = [
                 'Verb' => $verb,
