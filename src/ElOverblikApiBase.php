@@ -67,7 +67,7 @@ class ElOverblikApiBase
         try {
             try {
                 if ($endpoint == 'token' && $this->cachedToken) {
-                    return $this->accessToken;
+                    return;
                 } else if ($endpoint == 'token' && !$this->cachedToken) {
                     $this->accessToken = $this->refreshToken;
                 }
@@ -120,6 +120,17 @@ class ElOverblikApiBase
                     'Response' => $exceptionBody,
                     'Code' => $e->getCode(),
                 ];
+
+                //Retry with without data-access token
+                if($e->getCode() == 401 && $this->cachedToken) {
+                    //Clear data-access token
+                    $this->cachedToken = false;
+                    $this->refreshToken = null;
+                    //Login
+                    $this->makeErrorHandledRequest('GET', 'token', null, null);
+                    //Retry
+                    return $this->makeErrorHandledRequest($verb, $endpoint, $parameters, $payload, $returnResponse);
+                }
 
                 $errorCode = null;
                 if (isset($decodedExceptionBody['Message'])) {

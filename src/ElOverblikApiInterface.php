@@ -6,7 +6,7 @@ interface ElOverblikApiInterface
 {
     public function token(string $token): void;
 
-    public function getFirstMeteringPoint(): string;
+    public function getFirstMeteringPoint(string $refresh_token): string;
 
     public function getMeteringPointData(): string;
 

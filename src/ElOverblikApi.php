@@ -17,7 +17,7 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         $this->makeErrorHandledRequest('GET', 'token', null, null);
     }
 
-    public function getFirstMeteringPoint(): string
+    public function getFirstMeteringPoint(string $refresh_token): string
     {
         $json = $this->makeErrorHandledRequest('GET', 'meteringpoints/meteringpoints', null, null, true);
         $meteringPointId = json_decode($json, true)['result'][0]['meteringPointId'];
