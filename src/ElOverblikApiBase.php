@@ -155,7 +155,8 @@ class ElOverblikApiBase
             //503 goes here
 
             //Retry with without data-access token - actually I don't get why 4xx should ever come here
-            if($e->getCode() == 401 && $this->cachedToken) {
+            $code = $e->getCode();
+            if($code == 401 && $this->cachedToken) {
                 //Clear data-access token
                 $this->cachedToken = false;
                 //Login
@@ -166,7 +167,6 @@ class ElOverblikApiBase
 
 
             $response = $e->getResponse()->getBody()->getContents();
-            $code = $e->getCode();
             $message = $e->getMessage();
             $messages = [
                 'Verb' => $verb,
@@ -180,7 +180,7 @@ class ElOverblikApiBase
             logger('An TransferException occured. Code is ' . $code . ' and data is as follows:');
             logger($message);
             logger($response);
-            event(new EloverblikRequestFailed($verb, $endpoint));
+            event(new EloverblikRequestFailed($verb, $endpoint, $code));
             $energiOverblikApiException = new ElOverblikApiException($messages, [], $code);
             throw $energiOverblikApiException;
         }
