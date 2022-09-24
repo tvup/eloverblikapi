@@ -204,7 +204,7 @@ class ElOverblikApiBase
         if (null !== $payload) {
             $options = array_merge($options, ['json' => $payload]);
         }
-
+        event(new EloverblikRequestMade($verb, $endpoint));
         return $this->client->request($verb, $url, $options);
     }
 
