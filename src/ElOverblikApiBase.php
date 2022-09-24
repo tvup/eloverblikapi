@@ -165,16 +165,21 @@ class ElOverblikApiBase
 
 
             $response = $e->getResponse()->getBody()->getContents();
+            $code = $e->getCode();
+            $message = $e->getMessage();
             $messages = [
                 'Verb' => $verb,
                 'Endpoint' => $endpoint,
                 'Payload' => $payload,
-                'Message' => $e->getMessage(),
+                'Message' => $message,
                 'Response' => $response,
-                'Code' => $e->getCode(),
+                'Code' => $code,
                 'Class' => get_class($e)
             ];
-            $energiOverblikApiException = new ElOverblikApiException($messages, [], $e->getCode());
+            logger('An TransferException occured. Code is ' . $code . ' and data is as follows:');
+            logger($message);
+            logger($response);
+            $energiOverblikApiException = new ElOverblikApiException($messages, [], $code);
             throw $energiOverblikApiException;
         }
     }
