@@ -6,7 +6,7 @@ use Carbon\Carbon;
 
 class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
 {
-    protected bool $debug;
+    protected bool $debug = false;
 
     public function token(string $refreshToken): void
     {
