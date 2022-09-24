@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use ErrorException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\TransferException;
 use Psr\Http\Message\ResponseInterface;
 
@@ -153,7 +154,7 @@ class ElOverblikApiBase
         } catch (TransferException $e) {
             //503 goes here
 
-            //Retry with without data-access token
+            //Retry with without data-access token - actually I don't get why 4xx should ever come here
             if($e->getCode() == 401 && $this->cachedToken) {
                 //Clear data-access token
                 $this->cachedToken = false;
@@ -179,6 +180,7 @@ class ElOverblikApiBase
             logger('An TransferException occured. Code is ' . $code . ' and data is as follows:');
             logger($message);
             logger($response);
+            event(new EloverblikRequestFailed($verb, $endpoint));
             $energiOverblikApiException = new ElOverblikApiException($messages, [], $code);
             throw $energiOverblikApiException;
         }
