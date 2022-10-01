@@ -25,7 +25,7 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         return $meteringPointId;
     }
 
-    public function getMeteringPointData(): string
+    public function getMeteringPointData(): array
     {
         $json = $this->makeErrorHandledRequest('GET', 'meteringpoints/meteringpoints', null, null, true);
         $meteringPointData = json_decode($json, true)['result'][0];

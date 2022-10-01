@@ -8,7 +8,7 @@ interface ElOverblikApiInterface
 
     public function getFirstMeteringPoint(string $refresh_token): string;
 
-    public function getMeteringPointData(): string;
+    public function getMeteringPointData(): array;
 
     public function getHourTimeSeriesFromMeterData(string $fromDate, string $toDate, ?string $meteringPointId): array;
 
