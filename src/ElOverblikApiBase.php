@@ -123,7 +123,8 @@ class ElOverblikApiBase
                 ];
 
                 //Retry with without data-access token
-                if($e->getCode() == 401 && $this->cachedToken) {
+                $code = $e->getCode();
+                if($code == 401 && $this->cachedToken) {
                     //Clear data-access token
                     $this->cachedToken = false;
                     //Login
@@ -148,6 +149,7 @@ class ElOverblikApiBase
                     throw $energiOverblikApiException;
                 } else {
                     $energiOverblikApiException = new ElOverblikApiException(['Unknown error: ' . $e->getMessage()], [], $e->getCode());
+                    event(new EloverblikRequestFailed($verb, $endpoint, $code));
                     throw $energiOverblikApiException;
                 }
             }
