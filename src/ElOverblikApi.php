@@ -40,7 +40,13 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         $payload = ['meteringPoints' => ['meteringPoint'=> [$meteringPointId]]];
         $json = $this->makeErrorHandledRequest('POST', 'meterdata/gettimeseries/' . $fromDate . '/' . $toDate . '/Hour', null, $payload, true);
         $json = json_decode($json, true);
-        $result = $json['result'][0]['MyEnergyData_MarketDocument']['TimeSeries'][0]['Period'];
+        $timeSeries = $json['result'][0]['MyEnergyData_MarketDocument']['TimeSeries'];
+        if(count($timeSeries) > 0)
+        {
+            $result = $timeSeries[0]['Period'];
+        } else {
+            $result = array();
+        }
         $allHours = array();
         foreach ($result as $day) {
             $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->startOfDay();
