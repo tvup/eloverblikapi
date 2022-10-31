@@ -51,7 +51,7 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         foreach ($result as $day) {
             $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->startOfDay();
             foreach ($day['Point'] as $point) {
-                $day_hour_key = $day_key->toDateTimeLocalString();
+                $day_hour_key = $day_key->format('c');
                 $allHours[$day_hour_key] = $point['out_Quantity.quantity'];
                 $day_key->addHour();
             }
