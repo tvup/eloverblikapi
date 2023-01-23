@@ -232,13 +232,11 @@ class ElOverblikApiBase
      */
     private function getAccessTokenFromFile(): void
     {
+        $file = null;
         if(isset($this->md5RefreshToken)) {
             $file = file_get_contents($this->storage_path . '/' . ($this->md5RefreshToken ? $this->md5RefreshToken . '-' : '') . self::TOKEN_FILENAME);
-        } else {
-            $file = file_get_contents($this->storage_path . '/' . self::TOKEN_FILENAME);
-        }
-        /** @var ElOverblikApiDataAccessToken $dataAccessToken */
-        $dataAccessToken = unserialize($file);
+        } /** @var ElOverblikApiDataAccessToken $dataAccessToken */
+        $dataAccessToken = $file ? unserialize($file) : null;
         if ($dataAccessToken && Carbon::parse($dataAccessToken->getIssuedAt())->greaterThanOrEqualTo(Carbon::now()->subDay())) {
             $this->accessToken = $dataAccessToken->getDataAccessToken();
             $this->cachedToken = true;
@@ -247,13 +245,14 @@ class ElOverblikApiBase
 
     private function saveAccessTokenToFile(ElOverblikApiDataAccessToken $dataAccessToken): void
     {
+        $file = null;
         if(isset($this->md5RefreshToken)) {
             $file = fopen($this->storage_path . '/' . ($this->md5RefreshToken ? $this->md5RefreshToken . '-' : '') . self::TOKEN_FILENAME, "w") or die("Unable to open file!");
-        } else  {
-            $file = fopen($this->storage_path . '/' . self::TOKEN_FILENAME, "w") or die("Unable to open file!");
         }
-        fwrite($file, serialize($dataAccessToken));
-        fclose($file);
+        if($file) {
+            fwrite($file, serialize($dataAccessToken));
+            fclose($file);
+        }
     }
 
     protected function setRefreshToken(string $refreshToken)
