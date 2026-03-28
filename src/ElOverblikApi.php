@@ -74,11 +74,13 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         }
         $allQuarters = array();
         foreach ($result as $day) {
+            $resolution = $day['resolution'] ?? 'PT15M';
+            $minutesPerPoint = $resolution === 'PT1H' ? 60 : 15;
             $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->startOfDay();
             foreach ($day['Point'] as $point) {
                 $day_quarter_key = $day_key->format('c');
                 $allQuarters[$day_quarter_key] = $point['out_Quantity.quantity'];
-                $day_key->addMinutes(15);
+                $day_key->addMinutes($minutesPerPoint);
             }
         }
         return $allQuarters;
