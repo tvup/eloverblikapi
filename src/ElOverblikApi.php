@@ -59,6 +59,31 @@ class ElOverblikApi extends ElOverblikApiBase implements ElOverblikApiInterface
         return $allHours;
     }
 
+    public function getQuarterTimeSeriesFromMeterData(string $fromDate, string $toDate, ?string $meteringPointId): array
+    {
+        $meteringPointId = $meteringPointId ? : $this->meteringPointId;
+        $payload = ['meteringPoints' => ['meteringPoint'=> [$meteringPointId]]];
+        $json = $this->makeErrorHandledRequest('POST', 'meterdata/gettimeseries/' . $fromDate . '/' . $toDate . '/Quarter', null, $payload, true);
+        $json = json_decode($json, true);
+        $timeSeries = $json['result'][0]['MyEnergyData_MarketDocument']['TimeSeries'];
+        if(count($timeSeries) > 0)
+        {
+            $result = $timeSeries[0]['Period'];
+        } else {
+            $result = array();
+        }
+        $allQuarters = array();
+        foreach ($result as $day) {
+            $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->startOfDay();
+            foreach ($day['Point'] as $point) {
+                $day_quarter_key = $day_key->format('c');
+                $allQuarters[$day_quarter_key] = $point['out_Quantity.quantity'];
+                $day_key->addMinutes(15);
+            }
+        }
+        return $allQuarters;
+    }
+
     public function getCharges(string $meteringPointId): array
     {
         $payload = ['meteringPoints' => ['meteringPoint'=> [$meteringPointId]]];

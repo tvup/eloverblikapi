@@ -33,6 +33,22 @@ class ElOverblikApiMock implements ElOverblikApiInterface
         return $allHours;
     }
 
+    public function getQuarterTimeSeriesFromMeterData(string $fromDate, string $toDate, ?string $meteringPointId): array
+    {
+        $file = file_get_contents(__DIR__ . '/../example_data/el.dat');
+        $result = unserialize($file);
+        $allQuarters = array();
+        foreach ($result as $day) {
+            $day_key = Carbon::parse($day['timeInterval']['start'])->setTimezone('Europe/Copenhagen')->startOfDay();
+            foreach ($day['Point'] as $point) {
+                $day_quarter_key = $day_key->toDateTimeLocalString();
+                $allQuarters[$day_quarter_key] = $point['out_Quantity.quantity'];
+                $day_key->addMinutes(15);
+            }
+        }
+        return $allQuarters;
+    }
+
     public function setDebug(bool $debug): void
     {
         // TODO: Implement setDebug() method.
