@@ -14,6 +14,13 @@ class ElOverblikApiBase
 {
     const BASE_URL = 'https://api.eloverblik.dk/customerapi/api/';
     const TOKEN_FILENAME = 'eloverblik-token.serialized';
+    const MAX_RATE_LIMIT_RETRIES = 3;
+    const MAX_RATE_LIMIT_WAIT_SECONDS = 60;
+
+    /**
+     * Current depth of nested 429-retries
+     */
+    private int $rateLimitRetries = 0;
 
     /**
      * @var Client
@@ -131,6 +138,24 @@ class ElOverblikApiBase
                     $this->makeErrorHandledRequest('GET', 'token', null, null);
                     //Retry
                     return $this->makeErrorHandledRequest($verb, $endpoint, $parameters, $payload, $returnResponse);
+                }
+
+                //Retry on rate limit (429): wait, get a new token and retry - limited number of times
+                if($code == 429 && $this->rateLimitRetries < self::MAX_RATE_LIMIT_RETRIES) {
+                    $this->rateLimitRetries++;
+                    try {
+                        $retryAfter = $e->getResponse()->getHeaderLine('Retry-After');
+                        $wait = is_numeric($retryAfter)
+                            ? min((int) $retryAfter, self::MAX_RATE_LIMIT_WAIT_SECONDS)
+                            : 2 ** ($this->rateLimitRetries - 1);
+                        sleep($wait);
+
+                        $this->cachedToken = false;
+                        $this->makeErrorHandledRequest('GET', 'token', null, null);
+                        return $this->makeErrorHandledRequest($verb, $endpoint, $parameters, $payload, $returnResponse);
+                    } finally {
+                        $this->rateLimitRetries--;
+                    }
                 }
 
                 $errorCode = null;
