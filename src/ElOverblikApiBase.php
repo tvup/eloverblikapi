@@ -154,7 +154,8 @@ class ElOverblikApiBase
                         $this->makeErrorHandledRequest('GET', 'token', null, null);
                         return $this->makeErrorHandledRequest($verb, $endpoint, $parameters, $payload, $returnResponse);
                     } finally {
-                        $this->rateLimitRetries--;
+                        // Deliberately not decrementing rateLimitRetries here,
+                        // so the counter accumulates properly across retries up to MAX_RATE_LIMIT_RETRIES
                     }
                 }
 
